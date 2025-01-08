@@ -52,43 +52,40 @@ namespace OnlinePollSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<PollResultDto> SubmitVoteAsync(int pollId, int optionId, string voterIdentifier)
+        public async Task<Vote> SubmitVoteAsync(Vote vote)
         {
             // Check if user has already voted
             var existingVote = await _context.Votes
-                .FirstOrDefaultAsync(v => v.PollId == pollId && v.VoterIdentifier == voterIdentifier);
+                .FirstOrDefaultAsync(v => v.UserId == vote.UserId && v.PollId == vote.PollId);
 
             if (existingVote != null)
             {
                 throw new InvalidOperationException("User has already voted in this poll");
             }
 
-            // Add new vote
-            var vote = new Vote
-            {
-                PollId = pollId,
-                PollOptionId = optionId,
-                VoterIdentifier = voterIdentifier,
-                VotedAt = DateTime.UtcNow
-            };
-
+            // Add Vote
             _context.Votes.Add(vote);
 
             // Update vote count for the option
             var option = await _context.PollOptions
-                .FirstOrDefaultAsync(o => o.Id == optionId && o.PollId == pollId);
+                .FirstOrDefaultAsync(o => o.Id == vote.PollOptionId && o.PollId == vote.PollId);
 
-            if (option == null)
+            if (option != null)
             {
-                throw new ArgumentException("Invalid poll option");
+                // throw new ArgumentException("Invalid poll option");
+                option.VoteCount++;
             }
-
-            option.VoteCount++;
 
             await _context.SaveChangesAsync();
 
             // Return updated poll results
-            return await GetPollResultsAsync(pollId);
+            return vote;
+        }
+
+        public async Task<bool> HasUserVotedAsync(int userId, int pollId)
+        {
+            return await _context.Votes
+                .AnyAsync(v => v.Us erId == userId && v.PollId == pollId);
         }
 
         public async Task<PollResultDto> GetPollResultsAsync(int pollId)

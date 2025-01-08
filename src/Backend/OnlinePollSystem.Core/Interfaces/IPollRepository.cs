@@ -1,7 +1,5 @@
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using OnlinePollSystem.Core.Models;
-using OnlinePollSystem.Core.DTOs; 
+using OnlinePollSystem.Core.DTOs.Poll;
 
 namespace OnlinePollSystem.Core.Interfaces
 {
@@ -34,7 +32,14 @@ namespace OnlinePollSystem.Core.Interfaces
         /// <param name="optionId">The ID of the selected option</param>
         /// <param name="voterIdentifier">Unique identifier for the voter</param>
         /// <returns>Updated poll results</returns>
-        Task<PollResultDto> SubmitVoteAsync(int pollId, int optionId, string voterIdentifier);
+        Task<Vote> SubmitVoteAsync(Vote vote);
+
+        /// <summary>
+        /// Has the user already voted
+        /// </summary>
+        /// <param name="pollId">The ID of the poll</param>
+        Task<bool> HasUserVotedAsync(int userId, int pollId);
+
 
         /// <summary>
         /// Get poll results

@@ -1,12 +1,24 @@
-using System.Collections.Generic;
-namespace OnlinePollSystem.Core.DTOs
+using System.ComponentModel.DataAnnotations;
+
+namespace OnlinePollSystem.Core.DTOs.Poll
 {
     public class PollCreateDto
     {
+        [Required]
+        [StringLength(200, MinimumLength = 3)]
         public string Title { get; set; }
+        
+        [StringLength(1000)]
         public string Description { get; set; }
+        
+        [Required]
         public DateTime StartDate { get; set; }
+        
+        [Required]
         public DateTime EndDate { get; set; }
-        public List<string> Options { get; set; } = new List<string>();
+        
+        [Required]
+        [MinLength(2, ErrorMessage = "A poll must have at least two options")]
+        public List<string> Options { get; set; }
     }
 }
