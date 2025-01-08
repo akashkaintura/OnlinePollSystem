@@ -25,8 +25,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     )
 );
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(connectionString));
+// builder.Services.AddDbContext<AppDbContext>(options =>
+//     options.UseSqlServer(connectionString));
 
 // Add Swagger
 builder.Services.AddEndpointsApiExplorer();

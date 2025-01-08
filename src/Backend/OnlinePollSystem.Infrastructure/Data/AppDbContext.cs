@@ -15,6 +15,9 @@ namespace OnlinePollSystem.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            
+            // PostgreSQL-specific configuration
+            modelBuilder.HasPostgresExtension("uuid-ossp");
 
             modelBuilder.Entity<Poll>()
                 .HasMany(p => p.Options)

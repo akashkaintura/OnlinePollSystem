@@ -12,19 +12,20 @@ namespace OnlinePollSystem.Infrastructure.Data.Design
         public AppDbContext CreateDbContext(string[] args)
         {
             // Build configuration
-            IConfigurationRoot configuration = new ConfigurationBuilder()
+           IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables()
                 .Build();
 
-            // Create DbContextOptionsBuilder
-            var builder = new DbContextOptionsBuilder<AppDbContext>();
+            // Get connection string
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            builder.UseSqlServer(connectionString, 
-                options => options.MigrationsAssembly("OnlinePollSystem.Infrastructure"));
+            // Configure DbContext options
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            optionsBuilder.UseNpgsql(connectionString);
 
-            return new AppDbContext(builder.Options);
+            return new AppDbContext(optionsBuilder.Options);
         }
     }
 }

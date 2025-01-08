@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -11,17 +12,20 @@ namespace OnlinePollSystem.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:uuid-ossp", ",,");
+
             migrationBuilder.CreateTable(
                 name: "Polls",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
+                    StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,12 +36,12 @@ namespace OnlinePollSystem.Infrastructure.Migrations
                 name: "Votes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PollId = table.Column<int>(type: "int", nullable: false),
-                    PollOptionId = table.Column<int>(type: "int", nullable: false),
-                    VoterIdentifier = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    VotedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PollId = table.Column<int>(type: "integer", nullable: false),
+                    PollOptionId = table.Column<int>(type: "integer", nullable: false),
+                    VoterIdentifier = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    VotedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -48,11 +52,11 @@ namespace OnlinePollSystem.Infrastructure.Migrations
                 name: "PollOptions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PollId = table.Column<int>(type: "int", nullable: false),
-                    OptionText = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    VoteCount = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PollId = table.Column<int>(type: "integer", nullable: false),
+                    OptionText = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    VoteCount = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
