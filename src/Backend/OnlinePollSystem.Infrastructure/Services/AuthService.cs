@@ -2,6 +2,11 @@ using Microsoft.AspNetCore.Identity;
 using OnlinePollSystem.Core.DTOs.Auth;
 using OnlinePollSystem.Core.Interfaces;
 using OnlinePollSystem.Core.Models;
+using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
+using System;
+using System.Security.Cryptography;
 
 namespace OnlinePollSystem.Infrastructure.Services
 {

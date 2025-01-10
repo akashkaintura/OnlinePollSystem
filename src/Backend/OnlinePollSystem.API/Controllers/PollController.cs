@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OnlinePollSystem.Core.DTOs.Poll;
 using OnlinePollSystem.Core.Interfaces;
-using OnlinePollSystem.Core.DTOs;
+using OnlinePollSystem.Core.Models;
 
 namespace OnlinePollSystem.API.Controllers
 {
@@ -12,37 +14,73 @@ namespace OnlinePollSystem.API.Controllers
 
         public PollController(IPollService pollService)
         {
-            _pollService = pollService ?? throw new ArgumentNullException(nameof(pollService));
+            _pollService = pollService;
         }
 
-        [HttpPost("{pollId}/vote")]
-        public async Task<ActionResult<PollResultDto>> SubmitVote(
-            int pollId, 
-            [FromBody] VoteSubmissionDto? voteDto)
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> CreatePoll([FromBody] PollCreateDto pollCreateDto)
         {
-            if (voteDto == null)
-            {
-                return BadRequest("Vote submission data is required.");
-            }
+            var creatorId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var poll = await _pollService.CreatePollAsync(pollCreateDto, creatorId);
+            return CreatedAtAction(nameof(GetPollById), new { pollId = poll.Id }, poll);
+        }
 
-            var result = await _pollService.SubmitVoteAsync(
-                pollId, 
-                voteDto.OptionId, 
-                HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"
-            );
-            return Ok(result);
+        [HttpGet("{pollId}")]
+        public async Task<IActionResult> GetPollById(int pollId)
+        {
+            var poll = await _pollService.GetPollByIdAsync(pollId);
+            if (poll == null) return NotFound();
+            return Ok(poll);
+        }
+
+        [HttpGet("active")]
+        public async Task<IActionResult> GetActivePolls()
+        {
+            var polls = await _pollService.GetActivePollsAsync();
+            return Ok(polls);
         }
 
         [HttpGet("{pollId}/results")]
-        public async Task<ActionResult<PollResultDto>> GetPollResults(int pollId)
+        public async Task<IActionResult> GetPollResults(int pollId)
         {
             var results = await _pollService.GetPollResultsAsync(pollId);
+            if (results == null) return NotFound();
             return Ok(results);
         }
-    }
 
-    public class VoteSubmissionDto
-    {
-        public int OptionId { get; set; }
+        [HttpPost("{pollId}/vote")]
+        [Authorize]
+        public async Task<IActionResult> SubmitVote(int pollId, [FromBody] Vote vote)
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            vote.PollId = pollId;
+            vote.UserId = userId;
+
+            try
+            {
+                var submittedVote = await _pollService.SubmitVoteAsync(userId, vote);
+                return Ok(submittedVote);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPaginatedPolls(
+            [FromQuery] PaginationDto paginationDto)
+        {
+            var polls = await _pollService.GetPaginatedPollsAsync(paginationDto);
+            return Ok(polls);
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchPolls([FromQuery] string searchTerm)
+        {
+            var polls = await _pollService.SearchPollsAsync(searchTerm);
+            return Ok(polls);
+        }
     }
 }

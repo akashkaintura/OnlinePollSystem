@@ -21,12 +21,18 @@ namespace OnlinePollSystem.Infrastructure.Data
 
             modelBuilder.Entity<Poll>()
                 .HasMany(p => p.Options)
-                .WithOne()
+                .WithOne(o => o.Poll)
                 .HasForeignKey(o => o.PollId);
 
             modelBuilder.Entity<Vote>()
-                .HasIndex(v => new { v.PollId, v.VoterIdentifier })
-                .IsUnique();
+                .HasOne(v => v.Poll)
+                .WithMany()
+                .HasForeignKey(v => v.PollId);
+
+            modelBuilder.Entity<Vote>()
+                .HasOne(v => v.PollOption)
+                .WithMany()
+                .HasForeignKey(v => v.PollOptionId);
         }
     }
 }

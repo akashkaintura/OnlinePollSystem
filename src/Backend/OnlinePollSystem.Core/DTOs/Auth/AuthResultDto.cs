@@ -7,14 +7,15 @@ namespace OnlinePollSystem.Core.DTOs.Auth
         public string Message { get; set; }
         public object User { get; set; }
 
-        public static AuthResultDto Success(string token, object user) => new()
+        // Rename the static methods to avoid conflict
+        public static AuthResultDto CreateSuccess(string token, object user) => new()
         {
             Success = true,
             Token = token,
             User = user
         };
 
-        public static AuthResultDto Failed(string message) => new()
+        public static AuthResultDto CreateFailure(string message) => new()
         {
             Success = false,
             Message = message

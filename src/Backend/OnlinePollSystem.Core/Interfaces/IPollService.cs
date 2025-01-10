@@ -1,5 +1,9 @@
 using System.Threading.Tasks;
 using OnlinePollSystem.Core.DTOs;
+using OnlinePollSystem.Core.DTOs.Poll;
+using OnlinePollSystem.Core.Models;
+using System.Collections.Generic;
+using OnlinePollSystem.Core.DTOs.Common;
 
 namespace OnlinePollSystem.Core.Interfaces
 {
@@ -27,6 +31,13 @@ namespace OnlinePollSystem.Core.Interfaces
         Task<Poll> GetPollByIdAsync(int pollId);
 
         /// <summary>
+        /// Retrieve results for a specific poll
+        /// </summary>
+        /// <param name="pollId">The ID of the poll</param>
+        /// <returns>Poll results</returns>
+        Task<PollResultDto> GetPollResultsAsync(int pollId);
+
+        /// <summary>
         /// Submit a vote for a specific poll option
         /// </summary>
         /// <param name="pollId">The ID of the poll</param>
@@ -36,10 +47,24 @@ namespace OnlinePollSystem.Core.Interfaces
         Task<Vote> SubmitVoteAsync(int UserId, Vote vote);
 
         /// <summary>
-        /// Retrieve results for a specific poll
+        /// has user voted
         /// </summary>
+        /// <param name="userId">The ID of the user</param>
         /// <param name="pollId">The ID of the poll</param>
-        /// <returns>Poll results</returns>
-        Task<PollResultDto> GetPollResultsAsync(int pollId);
+        /// <returns>True if the user has voted, false otherwise</returns>
+        Task<bool> HasUserVotedAsync(int userId, int pollId);
+
+        /// <summary>
+        /// Paginate all polls
+        /// </summary>
+        /// <param name="paginationDto">Pagination details</param>
+        Task<PaginatedResultDto<Poll>> GetPaginatedPollsAsync(PaginationDto paginationDto);
+
+        /// <summary>
+        /// Search for polls by title
+        /// </summary>
+        /// <param name="searchTerm">Search term</param>
+        /// <returns>List of polls</returns>
+        Task<List<Poll>> SearchPollsAsync(string searchTerm);
     }
 }

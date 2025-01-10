@@ -2,12 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OnlinePollSystem.Core.Models
 {
-    public class PollOption
+     public class PollOption
     {
         public int Id { get; set; }
-        
         public int PollId { get; set; }
-        public Poll Poll { get; set; }
         
         [Required]
         [StringLength(200)]

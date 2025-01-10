@@ -12,6 +12,8 @@ public class Startup
         services.AddScoped<IUser Repository, UserRepository>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IJwtService, JwtService>();
+        services.AddScoped<IPollService, PollService>();
+        services.AddScoped<IPollRepository, PollRepository>();
         
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -28,5 +30,28 @@ public class Startup
                         Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"]))
                 };
             });
+
+        services.AddValidatorsFromAssemblyContaining<PollCreateDtoValidator>();
+
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+
+        app.UseHttpsRedirection();
+
+        app.UseRouting();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
     }
 }

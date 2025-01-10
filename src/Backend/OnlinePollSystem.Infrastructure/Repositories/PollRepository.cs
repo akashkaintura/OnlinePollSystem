@@ -1,8 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using OnlinePollSystem.Core.Interfaces;
 using OnlinePollSystem.Core.Models;
-using OnlinePollSystem.Core.DTOs;
+using OnlinePollSystem.Core.DTOs.Poll;
+using OnlinePollSystem.Core.DTOs.Common;
 using OnlinePollSystem.Infrastructure.Data;
+using OnlinePollSystem.Infrastructure.Repositories;
+using System;
 
 namespace OnlinePollSystem.Infrastructure.Repositories
 {
@@ -85,7 +88,7 @@ namespace OnlinePollSystem.Infrastructure.Repositories
         public async Task<bool> HasUserVotedAsync(int userId, int pollId)
         {
             return await _context.Votes
-                .AnyAsync(v => v.Us erId == userId && v.PollId == pollId);
+                .AnyAsync(v => v.UserId == userId && v.PollId == pollId);
         }
 
         public async Task<PollResultDto> GetPollResultsAsync(int pollId)
@@ -114,5 +117,47 @@ namespace OnlinePollSystem.Infrastructure.Repositories
                 }).ToList()
             };
         }
+
+
+    public async Task<PaginatedResultDto<Poll>> GetPaginatedPollsAsync(
+        PaginationDto paginationDto, 
+        bool onlyActive = true)
+    {
+        var query = _context.Polls
+            .Include(p => p.Options)
+            .Include(p => p.Creator)
+            .AsQueryable();
+
+        if (onlyActive)
+        {
+            query = query.Where(p => p.IsActive && p.EndDate > DateTime.UtcNow);
+        }
+
+        var totalItems = await query.CountAsync();
+
+        var polls = await query
+            .OrderByDescending(p => p.CreatedAt)
+            .Skip((paginationDto.PageNumber - 1) * paginationDto.PageSize)
+            .Take(paginationDto.PageSize)
+            .ToListAsync();
+
+        return new PaginatedResultDto<Poll>
+        {
+            Items = polls,
+            TotalItems = totalItems,
+            PageNumber = paginationDto.PageNumber,
+            PageSize = paginationDto.PageSize
+        };
+    }
+
+    public async Task<List<Poll>> SearchPollsAsync(string searchTerm)
+    {
+        return await _context.Polls
+            .Include(p => p.Options)
+            .Where(p => 
+                p.Title.Contains(searchTerm) || 
+                p.Description.Contains(searchTerm))
+            .ToListAsync();
+    }
     }
 }

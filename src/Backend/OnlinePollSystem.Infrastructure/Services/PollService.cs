@@ -1,5 +1,10 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using OnlinePollSystem.Core.DTOs.Common;
+using OnlinePollSystem.Core.DTOs.Poll;
 using OnlinePollSystem.Core.Interfaces;
-using OnlinePollSystem.Core.DTOs;
+using OnlinePollSystem.Core.Models;
+using OnlinePollSystem.Infrastructure.Services;
 
 namespace OnlinePollSystem.Infrastructure.Services
 {
@@ -12,11 +17,18 @@ namespace OnlinePollSystem.Infrastructure.Services
             _pollRepository = pollRepository;
         }
 
-         public async Task<Vote> SubmitVoteAsync(int userId, Vote vote)
+        public async Task<Vote> SubmitVoteAsync(int userId, Vote vote)
         {
-            if (await _pollRepository.HasUser VotedAsync(userId, vote.PollId))
-                throw new InvalidOperationException("User  has already voted in this poll");
+            // Check if user has already voted
+            if (await _pollRepository.HasUserVotedAsync(userId, vote.PollId))
+            {
+                throw new InvalidOperationException("User has already voted in this poll");
+            }
 
+            // Set user ID for the vote
+            vote.UserId = userId;
+
+            // Submit the vote
             return await _pollRepository.SubmitVoteAsync(vote);
         }
 
@@ -52,6 +64,21 @@ namespace OnlinePollSystem.Infrastructure.Services
         {
             return await _pollRepository.GetActivePoolsAsync();
         }
+        
+        public async Task<PaginatedResultDto<Poll>> GetPaginatedPollsAsync(PaginationDto paginationDto)
+        {
+            return await _pollRepository.GetPaginatedPollsAsync(paginationDto);
+        }
 
+        public async Task<List<Poll>> SearchPollsAsync(string searchTerm)
+        {
+            return await _pollRepository.SearchPollsAsync(searchTerm);
+        }
+
+        public async Task<bool> HasUserVotedAsync(int userId, int pollId)
+        {
+            return await _pollRepository.HasUserVotedAsync(userId, pollId);
+        }
     }
 }
+
