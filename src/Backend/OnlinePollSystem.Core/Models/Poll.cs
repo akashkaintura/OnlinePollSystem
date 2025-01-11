@@ -18,6 +18,7 @@ namespace OnlinePollSystem.Core.Models
         public DateTime EndDate { get; set; }
         public bool IsActive { get; set; } = true;
         public int CreatorId { get; set; }
+        public User Creator { get; set; }
         public List<PollOption> Options { get; set; } = new List<PollOption>();
     }
 }

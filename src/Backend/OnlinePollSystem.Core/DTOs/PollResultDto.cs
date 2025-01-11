@@ -8,6 +8,4 @@ namespace OnlinePollSystem.Core.DTOs.Poll
         public string Title { get; set; }
         public List<PollOptionResultDto> OptionResults { get; set; }
     }
-
-   
 }

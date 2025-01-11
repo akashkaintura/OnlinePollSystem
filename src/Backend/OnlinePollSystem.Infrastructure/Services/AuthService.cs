@@ -50,7 +50,7 @@ namespace OnlinePollSystem.Infrastructure.Services
             // Generate token
             var token = _jwtService.GenerateToken(user);
 
-            return AuthResultDto.Success(token, new 
+            return AuthResultDto.CreateSuccess(token, new 
             { 
                 user.Id, 
                 user.Username, 
@@ -62,7 +62,7 @@ namespace OnlinePollSystem.Infrastructure.Services
         {
             var user = await _userRepository.GetByEmailAsync(loginDto.Email);
             if (user == null)
-                return AuthResultDto.Failed("Invalid credentials");
+                return AuthResultDto.CreateFailure("Invalid credentials");
 
             // Verify password
             var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(
@@ -79,7 +79,7 @@ namespace OnlinePollSystem.Infrastructure.Services
                 });
             }
 
-            return AuthResultDto.Failed("Invalid credentials");
+            return AuthResultDto.CreateFailure("Invalid credentials");
         }
     }
 }
