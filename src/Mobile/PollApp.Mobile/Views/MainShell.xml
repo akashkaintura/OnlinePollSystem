@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:local="clr-namespace:PollApp.Mobile.Views"
+       x:Class="PollApp.Mobile.MainShell"
+       Title="PollApp"
+       FlyoutBehavior="Flyout">
+
+    <Shell.Resources>
+        <ResourceDictionary>
+            <!-- Color Palette -->
+            <Color x:Key="Primary">#3498db</Color>
+            <Color x:Key="Secondary">#2ecc71</Color>
+            <Color x:Key="Background">#f1f2f6</Color>
+            <Color x:Key="Text">#2f3542</Color>
+        </ResourceDictionary>
+    </Shell.Resources>
+
+    <!-- Flyout Header -->
+    <Shell.FlyoutHeader>
+        <Grid 
+            BackgroundColor="{StaticResource Primary}" 
+            HeightRequest="200">
+            <VerticalStackLayout 
+                VerticalOptions="Center" 
+                HorizontalOptions="Center">
+                
+                <Image 
+                    Source="app_logo.png"
+                    HeightRequest="100"
+                    WidthRequest="100"/>
+                
+                <Label 
+                    Text="PollApp"
+                    TextColor="White"
+                    FontSize="Large"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <!-- Main Navigation Routes -->
+    <FlyoutItem Title="Polls" Icon="polls_icon.png">
+        <ShellContent
+            Title="Active Polls"
+            ContentTemplate="{DataTemplate local:PollListPage}"
+            Route="polls"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Create Poll" Icon="create_poll_icon.png">
+        <ShellContent
+            Title="New Poll"
+            ContentTemplate="{DataTemplate local:CreatePollPage}"
+            Route="create_poll"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="My Profile" Icon="profile_icon.png">
+        <ShellContent
+            Title="User Profile"
+            ContentTemplate="{DataTemplate local:UserProfilePage}"
+            Route="profile"/>
+    </FlyoutItem>
+
+    <!-- Separator -->
+    <ShellContent 
+        Title="Settings" 
+        Icon="settings_icon.png"
+        ContentTemplate="{DataTemplate local:SettingsPage}"
+        Route="settings"/>
+
+    <!-- Logout Option -->
+    <MenuItem 
+        Text="Logout" 
+        IconImageSource="logout_icon.png"
+        Command="{Binding LogoutCommand}"
+        StyleClass="MenuItemLogout"/>
+
+    <!-- Additional Shell Content for Modal/Detail Pages -->
+    <ShellContent
+        Title="Poll Details"
+        ContentTemplate="{DataTemplate local:PollDetailPage}"
+        Route="poll_detail"/>
+
+    <!-- Tab Bar for Alternative Navigation -->
+    <TabBar>
+        <ShellContent
+            Title="Polls"
+            Icon="polls_icon.png"
+            ContentTemplate="{DataTemplate local:PollListPage}"/>
+        
+        <ShellContent
+            Title="Create"
+            Icon="create_poll_icon.png"
+            ContentTemplate="{DataTemplate local:CreatePollPage}"/>
+        
+        <ShellContent
+            Title="Profile"
+            Icon="profile_icon.png"
+            ContentTemplate="{DataTemplate local:UserProfilePage}"/>
+    </TabBar>
+</Shell>

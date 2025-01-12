@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PollApp.Mobile.Views.CreatePollPage"
+             Title="Create New Poll">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
+            <Label 
+                Text="Create a New Poll" 
+                FontSize="Large" 
+                FontAttributes="Bold"
+                HorizontalOptions="Center"/>
+
+            <Entry 
+                Placeholder="Poll Title"
+                Text="{Binding Title}"
+                FontSize="Medium"/>
+
+            <Editor 
+                Placeholder="Poll Description (Optional)"
+                Text="{Binding Description}"
+                HeightRequest="100"
+                FontSize="Medium"/>
+
+            <Label 
+                Text="Poll Options" 
+                FontSize="Medium" 
+                FontAttributes="Bold"/>
+
+            <CollectionView 
+                ItemsSource="{Binding Options}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Entry 
+                                Placeholder="Enter option"
+                                Text="{Binding .}"
+                                FontSize="Medium"/>
+                            <Button 
+                                Text="Remove"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:CreatePollPage}}, Path=BindingContext.RemoveOptionCommand}"
+                                CommandParameter="{Binding .}"
+                                HorizontalOptions="End"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button 
+                Text="Add Option" 
+                Command="{Binding AddOptionCommand}"
+                HorizontalOptions="Center"/>
+
+            <Label 
+                Text="Poll Duration" 
+                FontSize="Medium" 
+                FontAttributes="Bold"/>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label 
+                    Grid.Column="0"
+                    Text="Start Date"
+                    VerticalOptions="Center"/>
+                <DatePicker 
+                    Grid.Column="1"
+                    Date="{Binding StartDate}"/>
+
+                <Label 
+                    Grid.Column="0"
+                    Text="End Date"
+                    VerticalOptions="Center"/>
+                <DatePicker 
+                    Grid.Column="1"
+                    Date="{Binding EndDate}"/>
+            </Grid>
+
+            <Button 
+                Text="Create Poll" 
+                Command="{Binding CreatePollCommand}"
+                HorizontalOptions="Center"
+                VerticalOptions="End"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

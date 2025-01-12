@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PollApp.Mobile.Views.PollListPage"
+             Title="Active Polls">
+
+    <RefreshView 
+        Command="{Binding RefreshCommand}"
+        IsRefreshing="{Binding IsBusy}">
+        
+        <CollectionView 
+            ItemsSource="{Binding Polls}"
+            SelectionMode="Single"
+            SelectionChanged="OnPollSelectionChanged">
+            
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="10">
+                        <Frame>
+                            <VerticalStackLayout>
+                                <Label 
+                                    Text="{Binding Title}" 
+                                    FontSize="Medium" 
+                                    FontAttributes="Bold"/>
+                                
+                                <Label 
+                                    Text="{Binding Description}" 
+                                    FontSize="Small"
+                                    TextColor="Gray"/>
+                                
+                                <HorizontalStackLayout>
+                                    <Label 
+                                        Text="Expires: " 
+                                        FontSize="Small"/>
+                                    <Label 
+                                        Text="{Binding EndDate, StringFormat='{0:dd MMM yyyy}'}" 
+                                        FontSize="Small"
+                                        TextColor="Gray"/>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.EmptyView>
+                <VerticalStackLayout 
+                    HorizontalOptions="Center" 
+                    VerticalOptions="Center">
+                    
+                    <Label 
+                        Text="No active polls" 
+                        FontSize="Large"
+                        HorizontalOptions="Center"/>
+                    
+                    <Button 
+                        Text="Create a Poll" 
+                        Margin="0,20,0,0"
+                        Clicked="OnCreatePollClicked"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+        </CollectionView>
+    </RefreshView>
+</ContentPage>

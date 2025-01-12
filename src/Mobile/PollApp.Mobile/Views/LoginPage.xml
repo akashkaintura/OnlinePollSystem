@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PollApp.Mobile.Views.LoginPage"
+             Title="Login">
+
+    <ScrollView>
+        <VerticalStackLayout 
+            Spacing="25" 
+            Padding="30,0" 
+            VerticalOptions="Center">
+
+            <Image
+                Source="dotnet_bot.png"
+                SemanticProperties.Description="Cute dot net bot waving hi"
+                HeightRequest="200"
+                HorizontalOptions="Center" />
+
+            <Entry 
+                Placeholder="Email"
+                Keyboard="Email"
+                Text="{Binding Email}"
+                ReturnType="Next" />
+
+            <Entry 
+                Placeholder="Password"
+                IsPassword="True"
+                Text="{Binding Password}"
+                ReturnType="Done" />
+
+            <Button 
+                Text="Login"
+                Command="{Binding LoginCommand}"
+                IsEnabled="{Binding IsLoginEnabled}"
+                HorizontalOptions="Center" />
+
+            <Button 
+                Text="Register"
+                Command="{Binding RegisterCommand}"
+                Style="{StaticResource OutlineButton}"
+                HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

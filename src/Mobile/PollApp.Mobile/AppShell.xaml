@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:PollApp.Mobile.Views"
+       xmlns:viewmodels="clr-namespace:PollApp.Mobile.ViewModels"
+       x:Class="PollApp.Mobile.AppShell"
+       Title="PollApp">
+
+    <Shell.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Primary">#512BD4</Color>
+            <Color x:Key="Secondary">#DFD8F7</Color>
+            <Color x:Key="Tertiary">#2B0B98</Color>
+            <Color x:Key="White">White</Color>
+            <Color x:Key="Black">Black</Color>
+            <Color x:Key="Gray100">#E1E1E1</Color>
+            <Color x:Key="Gray200">#C8C8C8</Color>
+        </ResourceDictionary>
+    </Shell.Resources>
+
+    <!-- Login Route -->
+    <ShellContent
+        Title="Login"
+        ContentTemplate="{DataTemplate views:LoginPage}"
+        Route="login" />
+
+    <!-- Register Route -->
+    <ShellContent
+        Title="Register"
+        ContentTemplate="{DataTemplate views:RegisterPage}"
+        Route="register" />
+
+    <!-- Main App Routes -->
+    <FlyoutItem Title="Polls">
+        <ShellContent
+            Title="Active Polls"
+            ContentTemplate="{DataTemplate views:PollListPage}"
+            Route="polls" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Create Poll">
+        <ShellContent
+            Title="New Poll"
+            ContentTemplate="{DataTemplate views:CreatePollPage}"
+            Route="create-poll" />
+    </FlyoutItem>
+
+    <!-- Detail Routes -->
+    <ShellContent
+        Title="Poll Details"
+        ContentTemplate="{DataTemplate views:PollDetailPage}"
+        Route="polldetail" />
+
+    <ShellContent
+        Title="User Profile"
+        ContentTemplate="{DataTemplate views:UserProfilePage}"
+        Route="profile" />
+</Shell>
