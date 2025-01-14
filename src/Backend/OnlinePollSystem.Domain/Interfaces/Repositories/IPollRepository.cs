@@ -27,6 +27,9 @@ namespace OnlinePollSystem.Domain.Interfaces.Repositories
         Task<int> GetTotalPollCountAsync();
         Task<int> GetActivePollCountAsync();
 
+        Task<List<PollOptionStatisticsDto>> GetPollOptionStatisticsAsync(int pollId);
+
+
         // Poll Option Management
         Task AddPollOptionAsync(PollOption option);
         Task RemovePollOptionAsync(int optionId);

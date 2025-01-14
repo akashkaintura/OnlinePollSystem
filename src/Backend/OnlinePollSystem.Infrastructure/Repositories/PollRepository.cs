@@ -152,7 +152,7 @@ namespace OnlinePollSystem.Infrastructure.Repositories
         };
     }
 
-    public async Task<List<Poll>> SearchPollsAsync(string searchTerm)
+        public async Task<List<Poll>> SearchPollsAsync(string searchTerm)
     {
         return await _context.Polls
             .Include(p => p.Options)
@@ -161,5 +161,69 @@ namespace OnlinePollSystem.Infrastructure.Repositories
                 p.Description.Contains(searchTerm))
             .ToListAsync();
     }
+
+        public async Task<Poll> GetPollWithOptionsAndVotesAsync(int pollId)
+        {
+            var poll = await _context.Polls
+                .Include(p => p.Options)
+                    .ThenInclude(o => o.Votes)
+                .Include(p => p.Votes)
+                .FirstOrDefaultAsync(p => p.Id == pollId);
+
+            if (poll != null)
+            {
+                int totalVotes = poll.Votes.Count;
+
+                // Calculate vote percentages
+                foreach (var option in poll.Options)
+                {
+                    // Use the VoteCount property we added to PollOption
+                    option.UpdateVotePercentage(totalVotes);
+                }
+            }
+
+            return poll;
+        }
+
+        public async Task<IEnumerable<Poll>> GetPollStatisticsAsync()
+        {
+            var polls = await _context.Polls
+                .Include(p => p.Options)
+                    .ThenInclude(o => o.Votes)
+                .ToListAsync();
+
+            foreach (var poll in polls)
+            {
+                int totalVotes = poll.Votes.Count;
+
+                var pollOptions = poll.Options.Select(option => new 
+                {
+                    OptionId = option.Id,
+                    OptionText = option.Text, // Use Text property
+                    VoteCount = option.Votes.Count, // Use Votes collection
+                    VotePercentage = totalVotes > 0 
+                        ? (double)option.Votes.Count / totalVotes * 100 
+                        : 0
+                }).ToList();
+            }
+
+            return polls;
+        }
+
+        // If you need a method returning option statistics
+        public async Task<IEnumerable<object>> GetPollOptionStatisticsAsync(int pollId)
+        {
+            var poll = await _context.Polls
+                .Include(p => p.Options)
+                    .ThenInclude(o => o.Votes)
+                .FirstOrDefaultAsync(p => p.Id == pollId);
+
+            if (poll == null)
+                return new List<object>();
+
+            int totalVotes = poll.Votes.Count;
+
+            return PollOptionStatisticsDto.FromPollOptions(poll.Options, totalVotes);
+        }
     }
 }

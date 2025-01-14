@@ -7,6 +7,9 @@ namespace OnlinePollSystem.Infrastructure.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) 
             : base(options) {}
+        
+        // Add DbSet for Users
+        public DbSet<User> Users { get; set; }
 
         public DbSet<Poll> Polls { get; set; }
         public DbSet<PollOption> PollOptions { get; set; }
@@ -18,6 +21,16 @@ namespace OnlinePollSystem.Infrastructure.Data
             
             // PostgreSQL-specific configuration
             modelBuilder.HasPostgresExtension("uuid-ossp");
+
+            // Configure User entity
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(u => u.Id);
+                entity.HasIndex(u => u.Email).IsUnique();
+                entity.Property(u => u.Username).IsRequired();
+                entity.Property(u => u.Email).IsRequired();
+                entity.Property(u => u.PasswordHash).IsRequired();
+            });
 
             modelBuilder.Entity<Vote>(entity =>
             {
@@ -42,15 +55,25 @@ namespace OnlinePollSystem.Infrastructure.Data
                 .WithOne(o => o.Poll)
                 .HasForeignKey(o => o.PollId);
 
-            modelBuilder.Entity<Poll>()
-                .HasOne(v => v.Poll)
-                .WithMany()
-                .HasForeignKey(v => v.PollId);
-
             modelBuilder.Entity<PollOption>()
-                .HasOne(v => v.PollOption)
-                .WithMany()
-                .HasForeignKey(v => v.PollOptionId);
+            .HasMany(o => o.Votes)
+            .WithOne(v => v.Option)
+            .HasForeignKey(v => v.OptionId);
+
+            modelBuilder.Entity<Poll>()
+            .HasMany(p => p.Options)
+            .WithOne(o => o.Poll)
+            .HasForeignKey(o => o.PollId);
+
+            // modelBuilder.Entity<Poll>()
+            //     .HasOne(v => v.Poll)
+            //     .WithMany()
+            //     .HasForeignKey(v => v.PollId);
+
+            // modelBuilder.Entity<PollOption>()
+            //     .HasOne(v => v.PollOption)
+            //     .WithMany()
+            //     .HasForeignKey(v => v.PollOptionId);
         }
     }
 }

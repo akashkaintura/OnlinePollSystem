@@ -23,10 +23,14 @@ namespace OnlinePollSystem.Domain.Entities
         // Navigation Properties
         public ICollection<Vote> Votes { get; set; } = new List<Vote>();
 
-        // Computed Properties
+        // Properties to match the repository usage
         [NotMapped]
-        public int VoteCount => Votes.Count;
+        public string OptionText => Text;
 
+        [NotMapped]
+        public int VoteCount => Votes?.Count ?? 0;
+
+        // Computed Properties
         [NotMapped]
         public double VotePercentage { get; set; }
 
