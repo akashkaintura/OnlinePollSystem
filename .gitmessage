@@ -1,0 +1,12 @@
+# <type>: <subject>
+
+# Developed by Akash Kaintura
+# Commit guidelines:
+# - Use imperative mood
+# - Limit first line to 72 characters
+# - Explain what and why, not how
+
+# Examples:
+# feat: Add user authentication module
+# fix: Resolve login page rendering issue
+# docs: Update README with developer information
