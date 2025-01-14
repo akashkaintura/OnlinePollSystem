@@ -7,6 +7,10 @@ using OnlinePollSystem.Core.DTOs.Poll;
 using OnlinePollSystem.Core.DTOs.Common;
 using OnlinePollSystem.Infrastructure.Data;
 using OnlinePollSystem.Infrastructure.Repositories;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
 using System;
 
 namespace OnlinePollSystem.Infrastructure.Repositories

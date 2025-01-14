@@ -17,7 +17,7 @@ namespace OnlinePollSystem.Infrastructure.Services
             _pollRepository = pollRepository;
         }
 
-        public async Task<Vote> SubmitVoteAsync(int userId, Vote vote)
+        public async Task<Vote> VoteAsync(int userId, Vote vote)
         {
             // Check if user has already voted
             if (await _pollRepository.HasUserVotedAsync(userId, vote.PollId))

@@ -35,16 +35,13 @@ namespace OnlinePollSystem.Infrastructure.Data
             modelBuilder.Entity<Vote>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                
                 entity.HasOne(v => v.PollOption)
                     .WithMany(po => po.Votes)
                     .HasForeignKey(v => v.PollOptionId);
-                    
                 entity.HasOne(v => v.Poll)
                     .WithMany(p => p.Votes)
                     .HasForeignKey(v => v.PollId);
-                    
-                entity.HasOne(v => v.Users)
+                entity.HasOne(v => v.User)
                     .WithMany(u => u.Votes)
                     .HasForeignKey(v => v.UserId);
             });

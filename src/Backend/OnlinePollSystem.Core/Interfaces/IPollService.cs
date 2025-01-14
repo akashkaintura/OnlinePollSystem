@@ -44,7 +44,7 @@ namespace OnlinePollSystem.Core.Interfaces
         /// <param name="optionId">The ID of the selected option</param>
         /// <param name="voterIdentifier">Unique identifier for the voter</param>
         /// <returns>Updated poll results</returns>
-        Task<Vote> SubmitVoteAsync(int UserId, Vote vote);
+        Task<Vote> VoteAsync(int UserId, Vote vote);
 
         /// <summary>
         /// has user voted
