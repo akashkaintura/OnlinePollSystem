@@ -86,7 +86,3 @@ dotnet run
 REACT_APP_API_URL=http://localhost:5000/api
 ```
 
-
-### Additional Hidden Developer Files
-
-#### 1. Create a `.developer` file in the root directory
